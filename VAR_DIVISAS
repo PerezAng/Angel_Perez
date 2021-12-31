@@ -1,0 +1,26 @@
+import numpy as np
+import pandas as pd
+from pandas_datareader import data as wb
+import matplotlib.pyplot as plt
+
+assets = ['EURUSD=X']
+
+pf_data = pd.DataFrame()
+for t in assets:
+    pf_data[t] = wb.DataReader(t, data_source='yahoo', start='2015-1-1')['Adj Close']
+
+var_per=5
+var_95_bajista=np.percentile(pf_data, var_per)
+var_95_bajista
+
+var_per=95
+var_95_alcista=np.percentile(pf_data, var_per)
+var_95_alcista
+ 
+pf_data.plot(figsize=(10,6))
+
+plt.axhline(var_95_bajista, color = 'r', xmax=1)
+
+plt.axhline(var_95_alcista, color = 'g', xmax=1)
+
+plt.show()
