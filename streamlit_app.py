@@ -1,36 +1,42 @@
 import streamlit as st
-import yfinance as yf
-import pandas as pd
-import cufflinks as cl
-import datetime
+import yfinance as finance
 
-#title
 
-st.markdown('Stock Price WebApp')
-st.write('by Raul Hoyos')
+def get_ticker(name):
+	company = finance.Ticker(name) # google
+	return company
 
-#menu
 
-st.sidebar.subheader('Date Range')
-start_date = st.sidebar.date_input('start date', datetime.date(2019,1,1))
-end_date = st.sidebar.date_input('end date', datetime.date(2021,1,31))
+# Project Details
+st.title("Build and Deploy Stock Market App Using Streamlit")
+st.header("A Basic Data Science Web Application")
+st.sidebar.header("Geeksforgeeks \n TrueGeeks")
 
-#tickerdata
-ticker_list = pd.read_csv("s&p500.txt")
-tickerSymbol = st.sidebar.selectbox('Stock Ticker', ticker_list)
-tickerData = yf.Ticker(tickerSymbol)
-tickerDataHistory = tickerData.history(period='1d', start = start_date, end = end_date) #make period dynamic
+company1 = get_ticker("GOOGL")
+company2 = get_ticker("MSFT")
 
-#info
-st.header('**INFO**')
-st.markdown(tickerData.info['longName'])
-st.markdown(tickerData.info['sector'])
-st.write(tickerDataHistory)
+# fetches the data: Open, Close, High, Low and Volume
+google = finance.download("GOOGL", start="2021-10-01", end="2021-10-01")
+microsoft = finance.download("MSFT", start="2021-10-01", end="2021-10-01")
 
-#graph
+# Valid periods: 1d,5d,1mo,3mo,6mo,1y,2y,5y,10y,ytd,max
+data1 = company1.history(period="3mo")
+data2 = company2.history(period="3mo")
 
-st.header('Graphs')
-qf = cl.QuantFig(tickerDataHistory, title = 'first graph', legend = 'top', name = 'GS')
-qf.add_bollinger_bands()
-fig = qf.iplot(asFigure=True)
-st.plotly_chart(fig)
+# markdown syntax
+st.write("""
+### Google
+""")
+
+# detailed summary on Google
+st.write(company1.info['longBusinessSummary'])
+st.write(google)
+
+# plots the graph
+st.line_chart(data1.values)
+
+st.write("""
+### Microsoft
+""")
+st.write(company2.info['longBusinessSummary'], "\n", microsoft)
+st.line_chart(data2.values)
