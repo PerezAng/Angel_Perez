@@ -1,32 +1,122 @@
+#import required libraries
 import streamlit as st
-import numpy as np
-import pandas as pd
-from pandas_datareader import data as wb
-import matplotlib.pyplot as plt
+import yfinance as yf
+from datetime import datetime
 
-st.title('EaR APP')
+#function calling local css sheet
+def local_css(file_name):
+    with open(file_name) as f:
+        st.sidebar.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
-assets = ['EURUSD=X']
+#local css sheet
+local_css("style.css")
 
-pf_data = pd.DataFrame()
-for t in assets:
-    pf_data[t] = wb.DataReader(t, data_source='yahoo', start='2015-1-1')['Adj Close']
+#ticker search feature in sidebar
+st.sidebar.subheader("""Stock Search Web App""")
+selected_stock = st.sidebar.text_input("Enter a valid stock ticker...", "GOOG")
+button_clicked = st.sidebar.button("GO")
+if button_clicked == "GO":
+    main()
+
+#main function
+def main():
+    st.subheader("""Daily **closing price** for """ + selected_stock)
+    #get data on searched ticker
+    stock_data = yf.Ticker(selected_stock)
+    #get historical data for searched ticker
+    stock_df = stock_data.history(period='1d', start='2020-01-01', end=None)
+    #print line chart with daily closing prices for searched ticker
+    st.line_chart(stock_df.Close)
+
+    st.subheader("""Last **closing price** for """ + selected_stock)
+    #define variable today 
+    today = datetime.today().strftime('%Y-%m-%d')
+    #get current date data for searched ticker
+    stock_lastprice = stock_data.history(period='1d', start=today, end=today)
+    #get current date closing price for searched ticker
+    last_price = (stock_lastprice.Close)
+    #if market is closed on current date print that there is no data available
+    if last_price.empty == True:
+        st.write("No data available at the moment")
+    else:
+        st.write(last_price)
     
-spot_price=pf_data.iloc[-1,0]
-spot_price
+    #get daily volume for searched ticker
+    st.subheader("""Daily **volume** for """ + selected_stock)
+    st.line_chart(stock_df.Volume)
 
-st.text_input("Introduce tu strike", "Type Here ...") 
-  
-if(st.button('Submit')): 
-    result = name.title() 
-    st.success(result) 
+    #additional information feature in sidebar
+    st.sidebar.subheader("""Display Additional Information""")
+    #checkbox to display stock actions for the searched ticker
+    actions = st.sidebar.checkbox("Stock Actions")
+    if actions:
+        st.subheader("""Stock **actions** for """ + selected_stock)
+        display_action = (stock_data.actions)
+        if display_action.empty == True:
+            st.write("No data available at the moment")
+        else:
+            st.write(display_action)
+    
+    #checkbox to display quarterly financials for the searched ticker
+    financials = st.sidebar.checkbox("Quarterly Financials")
+    if financials:
+        st.subheader("""**Quarterly financials** for """ + selected_stock)
+        display_financials = (stock_data.quarterly_financials)
+        if display_financials.empty == True:
+            st.write("No data available at the moment")
+        else:
+            st.write(display_financials)
 
-strike= float(input("Introduce tu strike "))
+    #checkbox to display list of institutional shareholders for searched ticker
+    major_shareholders = st.sidebar.checkbox("Institutional Shareholders")
+    if major_shareholders:
+        st.subheader("""**Institutional investors** for """ + selected_stock)
+        display_shareholders = (stock_data.institutional_holders)
+        if display_shareholders.empty == True:
+            st.write("No data available at the moment")
+        else:
+            st.write(display_shareholders)
 
-st.text_input("Introduce tu exposición", "Type Here ...") 
+    #checkbox to display quarterly balance sheet for searched ticker
+    balance_sheet = st.sidebar.checkbox("Quarterly Balance Sheet")
+    if balance_sheet:
+        st.subheader("""**Quarterly balance sheet** for """ + selected_stock)
+        display_balancesheet = (stock_data.quarterly_balance_sheet)
+        if display_balancesheet.empty == True:
+            st.write("No data available at the moment")
+        else:
+            st.write(display_balancesheet)
 
-Exposición_USD = float(input("Introduce la exposición en USD "))
+    #checkbox to display quarterly cashflow for searched ticker
+    cashflow = st.sidebar.checkbox("Quarterly Cashflow")
+    if cashflow:
+        st.subheader("""**Quarterly cashflow** for """ + selected_stock)
+        display_cashflow = (stock_data.quarterly_cashflow)
+        if display_cashflow.empty == True:
+            st.write("No data available at the moment")
+        else:
+            st.write(display_cashflow)
 
-MtM= (Exposición_USD / spot_price) - (Exposición_USD / strike)
+    #checkbox to display quarterly earnings for searched ticker
+    earnings = st.sidebar.checkbox("Quarterly Earnings")
+    if earnings:
+        st.subheader("""**Quarterly earnings** for """ + selected_stock)
+        display_earnings = (stock_data.quarterly_earnings)
+        if display_earnings.empty == True:
+            st.write("No data available at the moment")
+        else:
+            st.write(display_earnings)
 
-st.text('El valor de mercado de la cobertura es EUR: {:,.2f}'.format(MtM))
+    #checkbox to display list of analysts recommendation for searched ticker
+    analyst_recommendation = st.sidebar.checkbox("Analysts Recommendation")
+    if analyst_recommendation:
+        st.subheader("""**Analysts recommendation** for """ + selected_stock)
+        display_analyst_rec = (stock_data.recommendations)
+        if display_analyst_rec.empty == True:
+            st.write("No data available at the moment")
+        else:
+            st.write(display_analyst_rec)
+
+if __name__ == "__main__":
+    main()
+
