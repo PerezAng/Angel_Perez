@@ -1,0 +1,255 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "Untitled7.ipynb",
+      "provenance": [],
+      "authorship_tag": "ABX9TyOEAGWDZZJH6y0sOvCabWHE",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/PerezAng/Angel_Perez/blob/main/Coin%20Gecko\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 1,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "j6bykBTYbnw7",
+        "outputId": "25dee7a5-ae6c-4504-d326-5f096c31e986"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Collecting pycoingecko\n",
+            "  Downloading pycoingecko-2.2.0-py3-none-any.whl (8.3 kB)\n",
+            "Requirement already satisfied: requests in /usr/local/lib/python3.7/dist-packages (from pycoingecko) (2.23.0)\n",
+            "Requirement already satisfied: chardet<4,>=3.0.2 in /usr/local/lib/python3.7/dist-packages (from requests->pycoingecko) (3.0.4)\n",
+            "Requirement already satisfied: idna<3,>=2.5 in /usr/local/lib/python3.7/dist-packages (from requests->pycoingecko) (2.10)\n",
+            "Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.7/dist-packages (from requests->pycoingecko) (2021.10.8)\n",
+            "Requirement already satisfied: urllib3!=1.25.0,!=1.25.1,<1.26,>=1.21.1 in /usr/local/lib/python3.7/dist-packages (from requests->pycoingecko) (1.24.3)\n",
+            "Installing collected packages: pycoingecko\n",
+            "Successfully installed pycoingecko-2.2.0\n"
+          ]
+        }
+      ],
+      "source": [
+        "pip install pycoingecko"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from pycoingecko import CoinGeckoAPI\n",
+        "cg = CoinGeckoAPI()"
+      ],
+      "metadata": {
+        "id": "X8vXtIdHbvN3"
+      },
+      "execution_count": 2,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "cg.get_price(ids='bitcoin', vs_currencies='usd')"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "_J-J6wjkb0Dd",
+        "outputId": "08e78cf7-89ca-41f3-b2cf-73b374defafb"
+      },
+      "execution_count": 3,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "{'bitcoin': {'usd': 41978}}"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 3
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "cg.get_price(ids='bitcoin,litecoin,ethereum', vs_currencies='usd')"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "qZA_7ErIcMlf",
+        "outputId": "26e914aa-894a-47fa-8c6b-9cb630cdf142"
+      },
+      "execution_count": 4,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "{'bitcoin': {'usd': 41942},\n",
+              " 'ethereum': {'usd': 2701.31},\n",
+              " 'litecoin': {'usd': 106.28}}"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 4
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "cg.get_price(ids='bitcoin,litecoin,ethereum', vs_currencies='usd,eur')"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "LWT_G_6CcOqE",
+        "outputId": "497ff773-0a5e-4a71-bba2-e541b8ec3670"
+      },
+      "execution_count": 5,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "{'bitcoin': {'eur': 37862, 'usd': 41920},\n",
+              " 'ethereum': {'eur': 2439.78, 'usd': 2701.31},\n",
+              " 'litecoin': {'eur': 95.99, 'usd': 106.28}}"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 5
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "cg.get_price(ids=['bitcoin', 'litecoin', 'ethereum'], vs_currencies=['usd', 'eur'])"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "4mnHbXBZcWP9",
+        "outputId": "19d966f6-9f28-404a-807f-5c8127d6fd9d"
+      },
+      "execution_count": 6,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "{'bitcoin': {'eur': 37862, 'usd': 41920},\n",
+              " 'ethereum': {'eur': 2439.78, 'usd': 2701.31},\n",
+              " 'litecoin': {'eur': 95.99, 'usd': 106.28}}"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 6
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        ""
+      ],
+      "metadata": {
+        "id": "p4orhC4lcb6P"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "cg.get_price(ids='bitcoin', vs_currencies='usd', include_market_cap='true', include_24hr_vol='true', include_24hr_change='true', include_last_updated_at='true')"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "AMvrL2_Yceym",
+        "outputId": "7d763c3f-7d73-466f-ae61-4a3987b6a930"
+      },
+      "execution_count": 7,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "{'bitcoin': {'last_updated_at': 1646858940,\n",
+              "  'usd': 41920,\n",
+              "  'usd_24h_change': 8.822271873760196,\n",
+              "  'usd_24h_vol': 28973945676.982353,\n",
+              "  'usd_market_cap': 796941877540.4834}}"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 7
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "cg.get_price(ids='bitcoin', vs_currencies='usd', include_market_cap=True, include_24hr_vol=True, include_24hr_change=True, include_last_updated_at=True)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "US5TvB3GcwEB",
+        "outputId": "9b031bb8-5f45-4763-fc12-52f84b10c5e4"
+      },
+      "execution_count": 8,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "{'bitcoin': {'last_updated_at': 1646858940,\n",
+              "  'usd': 41920,\n",
+              "  'usd_24h_change': 8.822271873760196,\n",
+              "  'usd_24h_vol': 28973945676.982353,\n",
+              "  'usd_market_cap': 796941877540.4834}}"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 8
+        }
+      ]
+    }
+  ]
+}
